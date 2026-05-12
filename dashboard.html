@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AutoDM — Instagram Automation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+    </div>
+    <span class="brand-name">AutoDM</span>
+  </div>
+
+  <nav class="sidebar-nav">
+    <button class="nav-item active" data-tab="overview">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      Overview
+    </button>
+    <button class="nav-item" data-tab="campaigns">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      Campaigns
+    </button>
+    <button class="nav-item" data-tab="settings">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 19.07a10 10 0 0 1 0-14.14"/></svg>
+      Settings
+    </button>
+    <button class="nav-item" data-tab="logs">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      Activity Log
+    </button>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="webhook-url-label">Webhook URL</div>
+    <div class="webhook-url" id="webhookUrl">Loading…</div>
+  </div>
+</aside>
+
+<!-- Main Content -->
+<main class="main">
+
+  <!-- ── OVERVIEW TAB ── -->
+  <section class="tab-panel active" id="tab-overview">
+    <header class="page-header">
+      <div>
+        <h1>Overview</h1>
+        <p class="subtitle">Your automation at a glance</p>
+      </div>
+    </header>
+
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-card">
+        <div class="stat-icon purple"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+        <div class="stat-value" id="stat-campaigns">—</div>
+        <div class="stat-label">Total Campaigns</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon green"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="stat-value" id="stat-active">—</div>
+        <div class="stat-label">Active Campaigns</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon blue"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <div class="stat-value" id="stat-replies">—</div>
+        <div class="stat-label">Replies Sent</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon pink"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.07 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3 2.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21 16.92z"/></svg></div>
+        <div class="stat-value" id="stat-dms">—</div>
+        <div class="stat-label">DMs Sent</div>
+      </div>
+    </div>
+
+    <div class="recent-section">
+      <h2 class="section-title">Recent Activity</h2>
+      <div class="log-table-wrap">
+        <table class="log-table" id="recentLogsTable">
+          <thead><tr><th>Action</th><th>Status</th><th>Comment ID</th><th>Time</th></tr></thead>
+          <tbody id="recentLogsTbody"><tr><td colspan="4" class="empty-row">Loading…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CAMPAIGNS TAB ── -->
+  <section class="tab-panel" id="tab-campaigns">
+    <header class="page-header">
+      <div>
+        <h1>Campaigns</h1>
+        <p class="subtitle">Keyword triggers &amp; automated responses</p>
+      </div>
+      <button class="btn btn-primary" id="btnNewCampaign">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        New Campaign
+      </button>
+    </header>
+
+    <div id="campaignsList" class="campaigns-list">
+      <div class="empty-state">
+        <div class="empty-icon">⚡</div>
+        <p>No campaigns yet. Create your first one!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SETTINGS TAB ── -->
+  <section class="tab-panel" id="tab-settings">
+    <header class="page-header">
+      <div>
+        <h1>Settings</h1>
+        <p class="subtitle">Connect your Instagram Business Account</p>
+      </div>
+    </header>
+
+    <div class="settings-card">
+      <h2 class="card-title">Instagram API Credentials</h2>
+      <p class="card-desc">These credentials connect your Instagram Business account to the automation engine. See the README for step-by-step setup instructions.</p>
+
+      <form class="settings-form" id="settingsForm" onsubmit="return false;">
+        <div class="form-group">
+          <label>Long-Lived Access Token</label>
+          <input type="password" id="accessToken" placeholder="EAABwzLixnjYBO…" autocomplete="off" />
+          <span class="form-hint">Expires every 60 days. See README for renewal instructions.</span>
+        </div>
+        <div class="form-group">
+          <label>Instagram Business Account ID</label>
+          <input type="text" id="igAccountId" placeholder="17841400000000000" />
+          <span class="form-hint">Found in Meta Business Suite → Settings → Business Info.</span>
+        </div>
+        <div class="form-group">
+          <label>Facebook App Secret <span class="optional">(recommended)</span></label>
+          <input type="password" id="appSecret" placeholder="abc123…" autocomplete="off" />
+          <span class="form-hint">Used to verify webhook signatures. Highly recommended for security.</span>
+        </div>
+        <div class="form-row">
+          <button type="submit" class="btn btn-primary" id="btnSaveSettings">Save Credentials</button>
+          <div id="settingsStatus" class="inline-status"></div>
+        </div>
+      </form>
+
+      <div class="divider"></div>
+
+      <div class="config-status" id="configStatus">
+        <div class="config-item">
+          <span>Access Token</span>
+          <span class="badge badge-unknown" id="cs-token">Unknown</span>
+        </div>
+        <div class="config-item">
+          <span>Account ID</span>
+          <span class="badge badge-unknown" id="cs-account">Unknown</span>
+        </div>
+        <div class="config-item">
+          <span>App Secret</span>
+          <span class="badge badge-unknown" id="cs-secret">Unknown</span>
+        </div>
+        <div class="config-item">
+          <span>Webhook URL</span>
+          <code class="inline-code" id="cs-webhook">—</code>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-card info-card">
+      <h2 class="card-title">ℹ️ DM Permission Note</h2>
+      <p>Instagram's Graph API only allows sending DMs to users who have <strong>previously messaged your business</strong>, OR after you've been granted the <code>instagram_manage_messages</code> permission with an approved use case.</p>
+      <p>To apply for DM permission: go to your <strong>Facebook Developer App → App Review → Permissions</strong> and request <code>instagram_manage_messages</code>. Approval typically takes 5–10 business days.</p>
+    </div>
+  </section>
+
+  <!-- ── LOGS TAB ── -->
+  <section class="tab-panel" id="tab-logs">
+    <header class="page-header">
+      <div>
+        <h1>Activity Log</h1>
+        <p class="subtitle">All automation events</p>
+      </div>
+      <button class="btn btn-ghost" id="btnRefreshLogs">Refresh</button>
+    </header>
+
+    <div class="log-table-wrap">
+      <table class="log-table" id="logsTable">
+        <thead><tr><th>Action</th><th>Status</th><th>Comment ID</th><th>Campaign</th><th>Time</th></tr></thead>
+        <tbody id="logsTbody"><tr><td colspan="5" class="empty-row">Loading…</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<!-- ── CAMPAIGN MODAL ── -->
+<div class="modal-overlay" id="campaignModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="modalTitle">New Campaign</h2>
+      <button class="modal-close" id="btnCloseModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <form id="campaignForm" onsubmit="return false;">
+        <input type="hidden" id="campaignId" />
+
+        <div class="form-group">
+          <label>Campaign Name</label>
+          <input type="text" id="campName" placeholder="e.g. Free Guide Giveaway" required />
+        </div>
+
+        <div class="form-group">
+          <label>Instagram Post ID</label>
+          <div class="input-with-action">
+            <input type="text" id="campPostId" placeholder="17854360229135492" required />
+            <button type="button" class="btn btn-ghost btn-sm" id="btnFetchPost">Preview</button>
+          </div>
+          <span class="form-hint">Get Post ID from Graph API Explorer: /me/media → find the ID for your post.</span>
+        </div>
+
+        <div class="post-preview" id="postPreview" style="display:none;">
+          <img id="postThumb" src="" alt="Post preview" />
+          <p id="postCaption"></p>
+        </div>
+
+        <div class="form-group">
+          <label>Trigger Keywords <span class="optional">(comma-separated, case-insensitive)</span></label>
+          <input type="text" id="campKeywords" placeholder="link, info, send me, interested" required />
+          <span class="form-hint">If a comment contains ANY of these words, automation fires.</span>
+        </div>
+
+        <div class="form-group">
+          <label>Comment Reply</label>
+          <textarea id="campCommentReply" rows="3" placeholder="Hey! I just sent you the link in your DMs 📩" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>DM Message</label>
+          <textarea id="campDmMessage" rows="4" placeholder="Hi! Thanks for your interest. Here's the link you asked for: https://…" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="toggle-label">
+            <span>Active</span>
+            <label class="toggle">
+              <input type="checkbox" id="campActive" checked />
+              <span class="toggle-slider"></span>
+            </label>
+          </label>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" id="btnCancelModal">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btnSaveCampaign">Save Campaign</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirm Modal -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal modal-sm">
+    <div class="modal-header">
+      <h2>Delete Campaign?</h2>
+      <button class="modal-close" id="btnCloseDelete">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="color:var(--text-muted); margin-bottom:24px;">This action cannot be undone. The campaign and all its settings will be permanently removed.</p>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="btnCancelDelete">Cancel</button>
+        <button class="btn btn-danger" id="btnConfirmDelete">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="/static/js/app.js"></script>
+</body>
+</html>
